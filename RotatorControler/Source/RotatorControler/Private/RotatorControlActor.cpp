@@ -6,6 +6,9 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "ECSPBlueprintFunctionLibrary.h"
 #include "SmoothlyMovetoCom.h"
+#include "KeyMap.h"
+#include "MessageManager.h"
+#include "MessageMiddlewareLibrary.h"
 
 // Sets default values
 ARotatorControlActor::ARotatorControlActor()//(EAttachmentRule::KeepRelative, false)
@@ -28,12 +31,25 @@ void ARotatorControlActor::BeginPlay()
 {
 	Super::BeginPlay();
 	atf = new FAttachmentTransformRules(EAttachmentRule::KeepRelative, false);
+	ADDMESSAGELISTEN(this, key_onaddrotatorleaf+mnumber, [=](const void* const p) {
+		//float addr;
+		//UMessageMiddlewareLibrary::getfloatfromjsonstring(*(FString*)p,"", addr);
+		int64 i = (int64)p;
+		int32 ih = i;
+		int32 il = i<<8;
+		//FPlatformMisc::LowLevelOutputDebugStringf(*FString("addactor: ").Append(FString::FromInt(ih)).Append(FString::FromInt(il)));
+
+		addactor((AActor*)p);
+	})
 }
-void ARotatorControlActor::addactor(AActor* ap, int radius, FVector axis)
+void ARotatorControlActor::setradius(int radius)
+{
+	mradius = radius;
+}
+void ARotatorControlActor::addactor(AActor* ap, FVector axis)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString("add sth"));
 	maxis = axis;
-	mradius = radius;
 	GetAttachedActors(actors);
 	int currentnumber = actors.Num();
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::FromInt(currentnumber));
@@ -44,7 +60,7 @@ void ARotatorControlActor::addactor(AActor* ap, int radius, FVector axis)
 	for (; i < currentnumber; i++)
 	{
 		FVector temv = UKismetMathLibrary::RotateAngleAxis(v1, angle * i, axis);
-		temv *= radius;
+		temv *= mradius;
 		actors[i]->SetActorRelativeLocation(temv);
 		FVector tv = actors[i]->GetActorLocation() - GetActorLocation();
 		FVector tv1 = UKismetMathLibrary::RotateAngleAxis(tv, mangle, axis);
@@ -52,7 +68,7 @@ void ARotatorControlActor::addactor(AActor* ap, int radius, FVector axis)
 	}
 	//ap->AttachToActor(this, *atf);
 	FVector temv = UKismetMathLibrary::RotateAngleAxis(v1, angle * i, axis);
-	temv *= radius; 
+	temv *= mradius;
 	temptarget->SetRelativeLocation(temv);
 	FVector tv = temptarget->GetComponentLocation() - GetActorLocation();
 	FVector tv1 = UKismetMathLibrary::RotateAngleAxis(tv, mangle, axis);

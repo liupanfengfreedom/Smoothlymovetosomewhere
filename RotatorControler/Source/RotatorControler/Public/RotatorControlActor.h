@@ -16,8 +16,8 @@ class ROTATORCONTROLER_API ARotatorControlActor : public AActor
 	FAttachmentTransformRules* atf;
 	int mangle = 0;
 	FVector maxis;
-	int mradius;
-
+	int mradius=500;
+	FString mnumber;
 public:
 	// Sets default values for this actor's properties
 	ARotatorControlActor();
@@ -33,7 +33,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable, Category = "UHInsmeshcom")
-	void addactor(AActor* ap, int radius, FVector axis = FVector(0, 0, 1));
+	void addactor(AActor* ap, FVector axis = FVector(0, 0, 1));
+	UFUNCTION(BlueprintCallable, Category = "UHInsmeshcom")
+	void setradius(int radius);
 	UFUNCTION(BlueprintCallable, Category = "UHInsmeshcom")
 	void setangle(int anglep);
+	UFUNCTION(BlueprintCallable, Category = "UHInsmeshcom")
+	void setnumber(FString number) { mnumber = number;}
 };

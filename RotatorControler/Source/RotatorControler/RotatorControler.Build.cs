@@ -39,6 +39,8 @@ public class RotatorControler : ModuleRules
 				"Slate",
 				"SlateCore",
 				"ECSPOOLS",
+				"MessageMiddleware",
+				"ConfigPlugin",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

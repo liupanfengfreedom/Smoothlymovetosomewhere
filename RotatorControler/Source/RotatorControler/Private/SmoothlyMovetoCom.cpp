@@ -32,7 +32,7 @@ void USmoothlyMovetoCom::BeginPlay()
 	// ...
 	
 }
-#define keepdis 300
+#define keepdis 200
 // Called every frame
 void USmoothlyMovetoCom::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -48,7 +48,7 @@ void USmoothlyMovetoCom::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 			}
 			else if (keepdis / 2 < dis && dis < keepdis * 2)
 			{
-				factor = 8;
+				factor = 10;
 				owner->SetActorTransform(UKismetMathLibrary::TLerp(tc, tt, DeltaTime * factor));
 			}
 			else
